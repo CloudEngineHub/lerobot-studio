@@ -1,5 +1,11 @@
 # 变更日志
 
+## 1.5.0
+
+### 次要变更
+
+- 将 `npm audit` 清零，使 CI 的 `npm audit --audit-level=high` 门禁恢复通过。`shadcn` CLI 及其 `fast-glob` → `micromatch` → `braces` 依赖链已移出 lockfile：其 Tailwind 主题层按上游字节原样内置为 `src/ui/shadcn-tailwind.css`（更新方式见文件头部注释），`src/ui/globals.css` 改为导入该文件而非 `shadcn/tailwind.css`；脚手架仍可用 `npx shadcn@latest add`。`@changesets/cli` 由 2.31.1 升级到 3.0.3（改用 `picomatch`）。`braces` 尚无修复版本（GHSA-vfj7-8cjw-p6xm），因此彻底移除所有引用路径才是真正的修复。Tailwind CSS 保持 4.3.3，本次未变更。
+
 ## 1.4.0
 
 ### 次要变更

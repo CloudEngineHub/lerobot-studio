@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+### Minor Changes
+
+- Clear `npm audit` down to zero advisories so the CI `npm audit --audit-level=high` gate goes green again. The `shadcn` CLI and its `fast-glob` → `micromatch` → `braces` chain leave the lockfile: its Tailwind theme layer is vendored at `src/ui/shadcn-tailwind.css` (byte-for-byte upstream, see the header for refresh instructions) and `src/ui/globals.css` imports that file instead of `shadcn/tailwind.css`. Scaffolding still works with `npx shadcn@latest add`. `@changesets/cli` moves from 2.31.1 to 3.0.3, which uses `picomatch` instead of `micromatch`. `braces` has no patched release (GHSA-vfj7-8cjw-p6xm), so removing every path to it is the only real fix. Tailwind CSS remains on v4.3.3 — it was already there.
+
 ## 1.4.0
 
 ### Minor Changes
