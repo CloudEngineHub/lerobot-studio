@@ -15,8 +15,19 @@ if (!Number.isFinite(scale) || scale <= 0 || scale > 1) {
 
 // Round integer ceilings above the current artifacts. Raising one requires
 // an explicit review of the generated output.
+//
+// 2026-10-03 review (raised libEntry raw/gzip and largestWebJs gzip): the
+// breaches were introduced by the dependabot npm group that landed on main
+// before this branch (react-intl 10.2.2, parquet-wasm 0.8.0 and the
+// npm-minor-and-patch transitive updates). Building `75c4972` in a clean
+// worktree produced byte-identical artifacts to this tree —
+// `dist-lib/lerobot.es.js` 396,971 raw / 122,831 gzip and
+// `dist/assets/vendor-CTRz_hBz.js` 1,149,541 raw / 321,899 gzip — so the
+// dependency-security work in this release changes no bundle at all and the
+// ceilings only move to cover upstream's growth. Heads are ~1-3% (web initial
+// JS gzip is the tightest at ~0.2% and will need the next review).
 const budgets = {
-  libEntry: { raw: 390_000, gzip: 120_000 },
+  libEntry: { raw: 400_000, gzip: 125_000 },
   libCss: { raw: 360_000, gzip: 110_000 },
   webInitialJs: { raw: 2_700_000, gzip: 740_000 },
   webInitialCss: { raw: 200_000, gzip: 25_000 },
@@ -29,7 +40,7 @@ const budgets = {
   webWorkerWasm: { raw: 6_900_000, gzip: 2_100_000 },
   webWorkers: { raw: 470_000, gzip: 110_000 },
   largestLibJs: { raw: 680_000, gzip: 160_000 },
-  largestWebJs: { raw: 1_200_000, gzip: 320_000 },
+  largestWebJs: { raw: 1_200_000, gzip: 330_000 },
   npmTarball: { raw: 12_000_000, gzip: 3_500_000 },
 };
 
