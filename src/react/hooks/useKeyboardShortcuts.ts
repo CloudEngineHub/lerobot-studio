@@ -102,7 +102,7 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
 
       const target = e.target;
       if (!isEventInsideStudio(target, portalContainer)) return;
-      if (isPlaybackShortcutBlocked(target)) return;
+      if (isPlaybackShortcutBlocked(target, e.key)) return;
 
       const preventDefaultKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '];
       if (preventDefaultKeys.includes(e.key)) {
