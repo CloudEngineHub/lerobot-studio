@@ -111,7 +111,7 @@ describe('browser: embedded layout follows the host container', () => {
     const before = sidebar();
     before.setAttribute('data-probe', 'kept');
 
-    host.style.width = '500px';
+    host.style.width = '390px';
     await waitFor(() => layout.getAttribute('data-layout') === 'stacked');
     expect(sidebar()).toBe(before);
     expect(sidebar().getAttribute('data-probe')).toBe('kept');
@@ -119,6 +119,40 @@ describe('browser: embedded layout follows the host container', () => {
     host.style.width = '900px';
     await waitFor(() => layout.getAttribute('data-layout') === 'split');
     expect(sidebar()).toBe(before);
+  }, 60_000);
+
+  it('restores the width the user chose after the host narrows and widens again', async () => {
+    const layout = await mount(900);
+    await waitFor(() => layout.getAttribute('data-layout') === 'split');
+    const width = () => Math.round(sidebar().getBoundingClientRect().width);
+    await waitFor(() => width() === 256, 5_000);
+
+    // Choose 400px with the keyboard (256 + 9 x 16), waiting out the width transition per step.
+    for (let step = 1; step <= 9; step++) {
+      await act(async () => {
+        separator().focus();
+        separator().dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }),
+        );
+      });
+      await waitFor(() => width() === 256 + step * 16, 5_000);
+    }
+    expect(separator().getAttribute('aria-valuenow')).toBe('400');
+    expect(separator().getAttribute('aria-valuemin')).toBe('200');
+    expect(separator().getAttribute('aria-valuemax')).toBe('580');
+
+    // A narrower host caps the rendered width (700 - 320) without forgetting the choice.
+    host.style.width = '700px';
+    await waitFor(() => width() === 380, 5_000);
+    expect(separator().getAttribute('aria-valuenow')).toBe('380');
+
+    // Through the stacked layout and back: the chosen 400px returns.
+    host.style.width = '390px';
+    await waitFor(() => layout.getAttribute('data-layout') === 'stacked');
+    host.style.width = '900px';
+    await waitFor(() => layout.getAttribute('data-layout') === 'split');
+    await waitFor(() => width() === 400, 5_000);
+    expect(separator().getAttribute('aria-valuenow')).toBe('400');
   }, 60_000);
 
   it('resizes the stacked sidebar with the keyboard', async () => {

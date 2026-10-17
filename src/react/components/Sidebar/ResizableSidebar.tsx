@@ -140,17 +140,42 @@ export const ResizableSidebar: React.FC<ResizableSidebarProps> = ({
     [applySize, currentSize, vertical],
   );
 
-  // Keep the horizontal width inside the container when the host shrinks.
+  // Track the container box so a narrow host caps the rendered width without
+  // overwriting the width the user chose (it comes back when the host widens),
+  // and so the separator can report its range to assistive technology.
+  const [containerBox, setContainerBox] = useState<{ width: number; height: number } | null>(null);
   useEffect(() => {
-    if (vertical) return;
     const parent = sidebarRef.current?.parentElement;
     if (!parent || typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(() => {
-      setWidth((prev) => clampWidth(prev));
+    const observer = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect;
+      if (rect && rect.width) setContainerBox({ width: rect.width, height: rect.height });
     });
     observer.observe(parent);
     return () => observer.disconnect();
-  }, [clampWidth, vertical]);
+  }, []);
+
+  const renderedWidth =
+    containerBox == null
+      ? width
+      : Math.max(minWidth, Math.min(width, containerBox.width - MIN_MAIN_CONTENT_PX));
+
+  // ARIA window-splitter values, in px of the sidebar's resizable dimension.
+  const ariaRange = vertical
+    ? {
+        min: MIN_STACKED_HEIGHT_PX,
+        max: Math.max(MIN_STACKED_HEIGHT_PX, (containerBox?.height ?? 0) - MIN_STACKED_MAIN_PX),
+        now: height ?? Math.round(STACKED_DEFAULT_SHARE * (containerBox?.height ?? 0)),
+      }
+    : {
+        min: minWidth,
+        max:
+          containerBox == null
+            ? maxWidth
+            : Math.max(minWidth, Math.min(maxWidth, containerBox.width - MIN_MAIN_CONTENT_PX)),
+        now: renderedWidth,
+      };
+  const ariaNow = Math.round(Math.min(ariaRange.max, Math.max(ariaRange.min, ariaRange.now)));
 
   const sidebarStyle: React.CSSProperties = vertical
     ? {
@@ -159,7 +184,7 @@ export const ResizableSidebar: React.FC<ResizableSidebarProps> = ({
         minHeight: MIN_STACKED_HEIGHT_PX,
       }
     : {
-        width: `${width}px`,
+        width: `${renderedWidth}px`,
         minWidth: `${minWidth}px`,
         maxWidth: `${maxWidth}px`,
         transition: isResizing ? 'none' : 'width 0.2s ease-out',
@@ -187,6 +212,9 @@ export const ResizableSidebar: React.FC<ResizableSidebarProps> = ({
       tabIndex={0}
       aria-orientation={vertical ? 'horizontal' : 'vertical'}
       aria-label={handleLabel}
+      aria-valuemin={Math.round(ariaRange.min)}
+      aria-valuemax={Math.round(ariaRange.max)}
+      aria-valuenow={ariaNow}
       className={`relative z-10 flex shrink-0 touch-none items-center justify-center bg-border transition-colors duration-200 hover:bg-primary/30 focus-visible:bg-primary/60 focus-visible:outline-none ${
         vertical ? 'h-1 w-full cursor-row-resize' : 'w-1 cursor-col-resize'
       } ${isResizing ? 'bg-primary/60' : ''}`}

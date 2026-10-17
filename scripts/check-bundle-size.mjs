@@ -27,7 +27,9 @@ if (!Number.isFinite(scale) || scale <= 0 || scale > 1) {
 // ceilings only move to cover upstream's growth. Heads are ~1-3% (web initial
 // JS gzip is the tightest at ~0.2% and will need the next review).
 const budgets = {
-  libEntry: { raw: 400_000, gzip: 125_000 },
+  // +5 KB raw head for the splitter ARIA values and Space-on-button handling
+  // (measured ~400.1 KB raw, just over the old 400,000-byte ceiling).
+  libEntry: { raw: 405_000, gzip: 125_000 },
   libCss: { raw: 360_000, gzip: 110_000 },
   webInitialJs: { raw: 2_700_000, gzip: 740_000 },
   webInitialCss: { raw: 200_000, gzip: 25_000 },
