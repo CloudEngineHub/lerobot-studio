@@ -435,7 +435,8 @@
     "selectEpisodeForBulk": "勾选 Episode",
     "deselectEpisode": "取消勾选 Episode",
     "exportSubset": "有选择时导出将仅包含所选子集",
-    "advanced": "高级"
+    "advanced": "高级",
+    "resizeHandle": "调整 episode 列表大小"
   },
   "editTask": {
     "title": "编辑 Episode 任务",

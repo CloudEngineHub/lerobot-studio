@@ -435,7 +435,8 @@
     "selectEpisodeForBulk": "Select episode",
     "deselectEpisode": "Deselect episode",
     "exportSubset": "Export uses selected subset when any selected",
-    "advanced": "Advanced"
+    "advanced": "Advanced",
+    "resizeHandle": "Resize episode list"
   },
   "editTask": {
     "title": "Edit Episode Task",

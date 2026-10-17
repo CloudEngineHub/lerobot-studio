@@ -253,266 +253,285 @@ export const PlaybackBar: React.FC = () => {
   }
 
   return (
-    <div className="min-h-16 border-t bg-background text-foreground px-4 py-2 flex items-center gap-4">
-      {/* Left: Navigation Controls */}
-      <div className="flex items-center gap-1">
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`h-8 w-8 ${playbackMode !== 'sequential' ? 'text-primary' : 'text-muted-foreground'} hover:text-foreground`}
-                onClick={nextMode}
-                disabled={isLoading}
-                aria-label={t('playback.mode.toggle')}
-              />
-            }
-          >
-            {getModeIcon()}
-          </TooltipTrigger>
-          <TooltipContent>{getModeLabel()}</TooltipContent>
-        </Tooltip>
+    <div className="shrink-0 border-t bg-background text-foreground">
+      <div
+        className="min-h-16 px-4 py-2 flex items-center gap-4 @max-[640px]/viewer:flex-wrap @max-[640px]/viewer:gap-x-2 @max-[640px]/viewer:gap-y-1 @max-[640px]/viewer:px-2"
+        data-testid="lerobot-playback-bar"
+      >
+        {/* Left: Navigation Controls */}
+        <div className="flex items-center gap-1 @max-[640px]/viewer:order-2 @max-[640px]/viewer:w-full @max-[640px]/viewer:justify-center">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`h-8 w-8 ${playbackMode !== 'sequential' ? 'text-primary' : 'text-muted-foreground'} hover:text-foreground`}
+                  onClick={nextMode}
+                  disabled={isLoading}
+                  aria-label={t('playback.mode.toggle')}
+                />
+              }
+            >
+              {getModeIcon()}
+            </TooltipTrigger>
+            <TooltipContent>{getModeLabel()}</TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 font-mono text-xs"
-                onClick={nextSpeed}
-                disabled={isLoading || totalFrames === 0}
-                aria-label={t('playback.speed')}
-              />
-            }
-          >
-            {playbackSpeed}x
-          </TooltipTrigger>
-          <TooltipContent>{t('playback.speed')}</TooltipContent>
-        </Tooltip>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2 font-mono text-xs"
+                  onClick={nextSpeed}
+                  disabled={isLoading || totalFrames === 0}
+                  aria-label={t('playback.speed')}
+                />
+              }
+            >
+              {playbackSpeed}x
+            </TooltipTrigger>
+            <TooltipContent>{t('playback.speed')}</TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setFrameIndex(Math.max(0, getFrameIndex() - 1))}
-                disabled={isLoading || subtaskDialogOpen}
-                aria-label={t('panels.keyboardShortcuts.prevFrame.action')}
-              />
-            }
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </TooltipTrigger>
-          <TooltipContent>{t('panels.keyboardShortcuts.prevFrame.action')}</TooltipContent>
-        </Tooltip>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setFrameIndex(Math.max(0, getFrameIndex() - 1))}
+                  disabled={isLoading || subtaskDialogOpen}
+                  aria-label={t('panels.keyboardShortcuts.prevFrame.action')}
+                />
+              }
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </TooltipTrigger>
+            <TooltipContent>{t('panels.keyboardShortcuts.prevFrame.action')}</TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="default"
-                size="icon"
-                className="h-9 w-9 rounded-full transition-all"
-                onClick={handlePlayPauseClick}
-                disabled={isLoading || totalFrames === 0 || subtaskDialogOpen}
-                aria-label={t('panels.keyboardShortcuts.playPause.action')}
-              />
-            }
-          >
-            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
-          </TooltipTrigger>
-          <TooltipContent>
-            {annotationEnabled && isPlaying
-              ? t('subtask.pauseToLabel', 'Pause to label')
-              : t('panels.keyboardShortcuts.playPause.action')}
-          </TooltipContent>
-        </Tooltip>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="default"
+                  size="icon"
+                  className="h-9 w-9 rounded-full transition-all"
+                  onClick={handlePlayPauseClick}
+                  disabled={isLoading || totalFrames === 0 || subtaskDialogOpen}
+                  aria-label={t('panels.keyboardShortcuts.playPause.action')}
+                />
+              }
+            >
+              {isPlaying ? (
+                <Pause className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4 fill-current" />
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              {annotationEnabled && isPlaying
+                ? t('subtask.pauseToLabel', 'Pause to label')
+                : t('panels.keyboardShortcuts.playPause.action')}
+            </TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setFrameIndex(Math.min(totalFrames - 1, getFrameIndex() + 1))}
-                disabled={isLoading || subtaskDialogOpen}
-                aria-label={t('panels.keyboardShortcuts.nextFrame.action')}
-              />
-            }
-          >
-            <ChevronRight className="h-4 w-4" />
-          </TooltipTrigger>
-          <TooltipContent>{t('panels.keyboardShortcuts.nextFrame.action')}</TooltipContent>
-        </Tooltip>
-      </div>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setFrameIndex(Math.min(totalFrames - 1, getFrameIndex() + 1))}
+                  disabled={isLoading || subtaskDialogOpen}
+                  aria-label={t('panels.keyboardShortcuts.nextFrame.action')}
+                />
+              }
+            >
+              <ChevronRight className="h-4 w-4" />
+            </TooltipTrigger>
+            <TooltipContent>{t('panels.keyboardShortcuts.nextFrame.action')}</TooltipContent>
+          </Tooltip>
+        </div>
 
-      <Separator orientation="vertical" className="h-8 mx-2 bg-border" />
+        <Separator
+          orientation="vertical"
+          className="h-8 mx-2 bg-border @max-[640px]/viewer:hidden"
+        />
 
-      <div className="min-w-0 flex-1">
-        {trimSuggestion ? (
-          <div className="flex min-w-0 flex-wrap items-center gap-2 px-2">
-            <p className="text-xs text-primary">{t('batchTrim.previewNotice')}</p>
-            <Button size="sm" type="button" onClick={() => returnFromTrimPreview()}>
-              {t('batchTrim.return')}
+        <div className="min-w-0 flex-1 @max-[640px]/viewer:order-1 @max-[640px]/viewer:basis-full">
+          {trimSuggestion ? (
+            <div className="flex min-w-0 flex-wrap items-center gap-2 px-2">
+              <p className="text-xs text-primary">{t('batchTrim.previewNotice')}</p>
+              <Button size="sm" type="button" onClick={() => returnFromTrimPreview()}>
+                {t('batchTrim.return')}
+              </Button>
+              <Button size="sm" type="button" variant="ghost" onClick={() => cancelTrimPreview()}>
+                {t('common.cancel')}
+              </Button>
+            </div>
+          ) : null}
+          {!suggestion && episodeEditMode && versionCapability?.status === 'supported' ? (
+            <Button
+              size="sm"
+              variant={trimming ? 'secondary' : 'ghost'}
+              aria-pressed={trimming}
+              onClick={() => {
+                setPlaying(false);
+                setTrimEditMode(!trimming);
+              }}
+            >
+              {t('trim.title')}
             </Button>
-            <Button size="sm" type="button" variant="ghost" onClick={() => cancelTrimPreview()}>
-              {t('common.cancel')}
-            </Button>
-          </div>
-        ) : null}
-        {!suggestion && episodeEditMode && versionCapability?.status === 'supported' ? (
-          <Button
-            size="sm"
-            variant={trimming ? 'secondary' : 'ghost'}
-            aria-pressed={trimming}
-            onClick={() => {
-              setPlaying(false);
-              setTrimEditMode(!trimming);
-            }}
-          >
-            {t('trim.title')}
-          </Button>
-        ) : null}
-        {trimming && selectedEpisodeIndex != null ? (
-          <EpisodeTrimControls
-            range={trimRange ?? { startFrame: 0, endFrame: totalFrames - 1 }}
-            totalFrames={totalFrames}
+          ) : null}
+          {trimming && selectedEpisodeIndex != null ? (
+            <EpisodeTrimControls
+              range={trimRange ?? { startFrame: 0, endFrame: totalFrames - 1 }}
+              totalFrames={totalFrames}
+              fps={fps}
+              disabled={isLoading || !!activeTask || subtaskDialogOpen}
+              getFrameIndex={getFrameIndex}
+              onPause={() => {
+                userPausedRef.current = true;
+                setPlaying(false);
+              }}
+              onChange={(range) => {
+                if (suggestion)
+                  setTrimSuggestion({
+                    ...suggestion,
+                    range: range ?? { startFrame: 0, endFrame: totalFrames - 1 },
+                  });
+                else trimEpisode(selectedEpisodeIndex, range);
+              }}
+              preview={!!suggestion || previewTrim}
+              onPreviewChange={suggestion ? undefined : setPreviewTrim}
+            />
+          ) : null}
+          {!trimming && trimRange ? (
+            <p className="px-2 text-xs text-muted-foreground">
+              {t('trim.summary', {
+                original: totalFrames,
+                kept: trimRange.endFrame - trimRange.startFrame + 1,
+                start: (trimRange.startFrame / fps).toFixed(2),
+                end: ((trimRange.endFrame + 1) / fps).toFixed(2),
+              })}
+            </p>
+          ) : null}
+          <PlaybackProgressSlider
+            trimRange={trimRange}
+            currentFrames={currentFrames}
             fps={fps}
-            disabled={isLoading || !!activeTask || subtaskDialogOpen}
+            totalFrames={totalFrames}
+            totalTime={totalTime}
+            initialFrameIndex={currentFrameIndex}
+            isDisabled={isLoading || !!activeTask || subtaskDialogOpen}
+            setFrameIndex={setFrameIndex}
             getFrameIndex={getFrameIndex}
-            onPause={() => {
-              userPausedRef.current = true;
-              setPlaying(false);
+            subscribeFrameIndex={subscribeFrameIndex}
+            segments={currentSegments}
+            pendingRange={annotationEnabled ? pendingRange : null}
+            editRanges={annotationEnabled && !subtaskDialogOpen}
+            knownLabels={knownLabels}
+            onReplaceSegments={(next) => {
+              try {
+                replaceEpisodeSegments(next);
+              } catch (error) {
+                console.warn('Could not save subtask ranges', error);
+              }
             }}
-            onChange={(range) => {
-              if (suggestion)
-                setTrimSuggestion({
-                  ...suggestion,
-                  range: range ?? { startFrame: 0, endFrame: totalFrames - 1 },
-                });
-              else trimEpisode(selectedEpisodeIndex, range);
-            }}
-            preview={!!suggestion || previewTrim}
-            onPreviewChange={suggestion ? undefined : setPreviewTrim}
-          />
-        ) : null}
-        {!trimming && trimRange ? (
-          <p className="px-2 text-xs text-muted-foreground">
-            {t('trim.summary', {
-              original: totalFrames,
-              kept: trimRange.endFrame - trimRange.startFrame + 1,
-              start: (trimRange.startFrame / fps).toFixed(2),
-              end: ((trimRange.endFrame + 1) / fps).toFixed(2),
-            })}
-          </p>
-        ) : null}
-        <PlaybackProgressSlider
-          trimRange={trimRange}
-          currentFrames={currentFrames}
-          fps={fps}
-          totalFrames={totalFrames}
-          totalTime={totalTime}
-          initialFrameIndex={currentFrameIndex}
-          isDisabled={isLoading || !!activeTask || subtaskDialogOpen}
-          setFrameIndex={setFrameIndex}
-          getFrameIndex={getFrameIndex}
-          subscribeFrameIndex={subscribeFrameIndex}
-          segments={currentSegments}
-          pendingRange={annotationEnabled ? pendingRange : null}
-          editRanges={annotationEnabled && !subtaskDialogOpen}
-          knownLabels={knownLabels}
-          onReplaceSegments={(next) => {
-            try {
-              replaceEpisodeSegments(next);
-            } catch (error) {
-              console.warn('Could not save subtask ranges', error);
+            onDeleteSegment={removeSegment}
+            onFillGap={
+              annotationEnabled
+                ? (startFrame, endFrame) => {
+                    setRenameIndex(null);
+                    userPausedRef.current = true;
+                    setPlaying(false);
+                    if (beginPendingRange(startFrame, endFrame)) {
+                      setSubtaskDialogOpen(true);
+                    }
+                  }
+                : undefined
             }
-          }}
-          onDeleteSegment={removeSegment}
-          onFillGap={
-            annotationEnabled
-              ? (startFrame, endFrame) => {
-                  setRenameIndex(null);
-                  userPausedRef.current = true;
-                  setPlaying(false);
-                  if (beginPendingRange(startFrame, endFrame)) {
+            onRenameSegment={
+              annotationEnabled
+                ? (index) => {
+                    cancelPending();
+                    setRenameIndex(index);
+                    userPausedRef.current = true;
+                    setPlaying(false);
                     setSubtaskDialogOpen(true);
                   }
-                }
-              : undefined
+                : undefined
+            }
+          />
+        </div>
+
+        <Separator
+          orientation="vertical"
+          className="h-8 mx-2 bg-border @max-[640px]/viewer:hidden"
+        />
+
+        {/* Right: Meta Info */}
+        <div className="flex items-center gap-4 pr-2 @max-[640px]/viewer:hidden">
+          <div className="flex flex-col items-end">
+            <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">
+              {t('playback.meta.fps')}
+            </span>
+            <Badge variant="secondary" className="text-[10px] h-4.5 px-1 py-0 font-mono">
+              {fps}
+            </Badge>
+          </div>
+          <div className="flex flex-col items-end min-w-[60px]">
+            <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">
+              {t('playback.meta.version')}
+            </span>
+            <span className="text-[10px] font-mono text-foreground/80">
+              {info?.codebase_version || 'N/A'}
+            </span>
+          </div>
+        </div>
+        <EditSubtaskDialog
+          open={subtaskDialogOpen}
+          onOpenChange={(open) => {
+            setSubtaskDialogOpen(open);
+            if (!open) {
+              cancelPending();
+              setRenameIndex(null);
+            }
+          }}
+          startFrame={dialogStartFrame}
+          endFrame={dialogEndFrame}
+          startSeconds={frameTimeSeconds(
+            currentFrames[dialogStartFrame]?.timestamp,
+            dialogStartFrame,
+            fps,
+          )}
+          endSeconds={frameTimeSeconds(
+            currentFrames[dialogEndFrame]?.timestamp,
+            dialogEndFrame,
+            fps,
+          )}
+          initialLabel={
+            pendingRange
+              ? ''
+              : ((renameIndex != null ? currentSegments[renameIndex]?.label : '') ?? '')
           }
-          onRenameSegment={
-            annotationEnabled
-              ? (index) => {
-                  cancelPending();
-                  setRenameIndex(index);
-                  userPausedRef.current = true;
-                  setPlaying(false);
-                  setSubtaskDialogOpen(true);
-                }
-              : undefined
-          }
+          knownLabels={knownLabels}
+          onSave={(label) => {
+            if (renameIndex != null && !pendingRange) {
+              updateSegment(renameIndex, { ...currentSegments[renameIndex], label });
+              setRenameIndex(null);
+              return;
+            }
+            commitPending(label, { startFrame: dialogStartFrame, endFrame: dialogEndFrame });
+          }}
         />
       </div>
-
-      <Separator orientation="vertical" className="h-8 mx-2 bg-border" />
-
-      {/* Right: Meta Info */}
-      <div className="flex items-center gap-4 pr-2">
-        <div className="flex flex-col items-end">
-          <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">
-            {t('playback.meta.fps')}
-          </span>
-          <Badge variant="secondary" className="text-[10px] h-4.5 px-1 py-0 font-mono">
-            {fps}
-          </Badge>
-        </div>
-        <div className="flex flex-col items-end min-w-[60px]">
-          <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider">
-            {t('playback.meta.version')}
-          </span>
-          <span className="text-[10px] font-mono text-foreground/80">
-            {info?.codebase_version || 'N/A'}
-          </span>
-        </div>
-      </div>
-      <EditSubtaskDialog
-        open={subtaskDialogOpen}
-        onOpenChange={(open) => {
-          setSubtaskDialogOpen(open);
-          if (!open) {
-            cancelPending();
-            setRenameIndex(null);
-          }
-        }}
-        startFrame={dialogStartFrame}
-        endFrame={dialogEndFrame}
-        startSeconds={frameTimeSeconds(
-          currentFrames[dialogStartFrame]?.timestamp,
-          dialogStartFrame,
-          fps,
-        )}
-        endSeconds={frameTimeSeconds(currentFrames[dialogEndFrame]?.timestamp, dialogEndFrame, fps)}
-        initialLabel={
-          pendingRange
-            ? ''
-            : ((renameIndex != null ? currentSegments[renameIndex]?.label : '') ?? '')
-        }
-        knownLabels={knownLabels}
-        onSave={(label) => {
-          if (renameIndex != null && !pendingRange) {
-            updateSegment(renameIndex, { ...currentSegments[renameIndex], label });
-            setRenameIndex(null);
-            return;
-          }
-          commitPending(label, { startFrame: dialogStartFrame, endFrame: dialogEndFrame });
-        }}
-      />
     </div>
   );
 };

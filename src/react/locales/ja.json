@@ -435,7 +435,8 @@
     "selectEpisodeForBulk": "エピソードを選択",
     "deselectEpisode": "選択を解除",
     "exportSubset": "選択がある場合、エクスポートは選択サブセットのみ含みます",
-    "advanced": "詳細"
+    "advanced": "詳細",
+    "resizeHandle": "エピソード一覧のサイズを変更"
   },
   "editTask": {
     "title": "エピソードタスクを編集",
