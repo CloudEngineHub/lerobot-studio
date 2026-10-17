@@ -108,9 +108,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background text-foreground">
-      <div className="flex h-12 items-center px-4 gap-4 relative">
+      <div className="relative grid h-12 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-4 sm:px-4">
         {/* Left: Open & History */}
-        <div className="flex items-center gap-2 mr-auto">
+        <div className="flex min-w-0 items-center gap-2 justify-self-start">
           {datasetName && onGoHome && (
             <Tooltip>
               <TooltipTrigger
@@ -269,7 +269,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Center: Title & Logo */}
         <div
-          className="absolute left-1/2 top-1/2 flex max-w-[40vw] -translate-x-1/2 -translate-y-1/2 items-center gap-2 pointer-events-none"
+          className="flex min-w-0 items-center justify-center gap-2 sm:max-w-[40vw]"
           role={isLoading ? 'status' : undefined}
           aria-live={isLoading ? 'polite' : undefined}
         >
@@ -282,6 +282,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <img src="logo.svg" alt="LeRobot Studio Logo" className="h-5 w-5 opacity-90" />
           ) : null}
           <span
+            data-testid="lerobot-navbar-title"
             className={`block min-w-0 truncate text-sm font-semibold tracking-tight ${isLoading ? 'text-muted-foreground animate-pulse' : ''}`}
             title={displayName}
           >
@@ -290,11 +291,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Right: Controls */}
-        <div className="flex items-center gap-1 ml-auto">
+        <div className="flex items-center gap-1 justify-self-end">
           {/* View Controls */}
           {(onToggleSidebar || onTogglePlaybackBar) && (
             <>
-              <div className="flex items-center gap-0.5 mr-2">
+              <div className="flex items-center gap-0.5 sm:mr-2">
                 {onToggleSidebar && (
                   <Tooltip>
                     <TooltipTrigger
@@ -326,7 +327,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                          className="hidden h-8 w-8 text-muted-foreground hover:text-foreground sm:inline-flex"
                           onClick={onTogglePlaybackBar}
                         />
                       }
@@ -345,7 +346,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </Tooltip>
                 )}
               </div>
-              <Separator orientation="vertical" className="h-4 mr-2" />
+              <Separator orientation="vertical" className="mr-2 hidden h-4 sm:block" />
             </>
           )}
 
@@ -356,7 +357,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                  className="hidden h-9 w-9 text-muted-foreground hover:text-foreground sm:inline-flex"
                   asChild
                 >
                   <a
