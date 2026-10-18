@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.0
+
+### Minor Changes
+
+- 277c5bb: The embedded viewer now fills its host container. The package stylesheet is scoped to descendants of `.lerobot-root`, so the `h-full w-full` utilities on the root element itself never matched and the viewer collapsed to its content height. A base-layer `.lerobot-root` rule now sets `position: relative`, `width` / `height: 100%`, `min-width` / `min-height: 0`, and the theme `background-color` and `color`; host CSS passed through `className` still wins. In a host whose wrapper has a fixed height the viewer now stretches to it.
+
+  Below 640px of container width (the `@container/viewer` box, not the window) the episode sidebar moves under the player and stays resizable (drag the handle, or focus it and use the arrow keys; it is named "Resize episode list" and reports its size range through `aria-valuenow`, `aria-valuemin` and `aria-valuemax`). The sidebar follows the player in DOM and focus order, is moved rather than remounted when the container crosses 640px, and keeps the width the user chose. At the same width the playback bar wraps: progress on its own row, transport centred, FPS and version hidden.
+
+### Patch Changes
+
+- 277c5bb: The standalone navbar keeps the dataset name clear of the controls on phones: the name truncates with an ellipsis and shows the full name on hover, and the playback-bar toggle and GitHub link hide below 640px of window width.
+- 277c5bb: Playback shortcuts (Space, arrow keys) no longer fire while a widget that owns those keys has focus: tabs, sliders, radios, checkboxes, menus, listboxes and resize handles. A focused button or link keeps Space for its own activation (one press, one click), while the arrow keys still step playback there; with focus on the page or an episode row, Space plays and pauses. Element checks are realm-safe for hosts that render into another window.
+
 ## 1.5.0
 
 ### Minor Changes
