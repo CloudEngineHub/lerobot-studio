@@ -403,7 +403,8 @@
       "episodes": "任务",
       "analysis": "分析"
     },
-    "episodesTitle": "Episodes",
+    "episodesTitle": "片段",
+    "episodesCount": "{count} 个片段",
     "searchPlaceholder": "搜索...",
     "noDescription": "暂无描述",
     "errorLoading": "加载数据失败",
