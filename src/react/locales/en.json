@@ -404,6 +404,7 @@
       "analysis": "Analysis"
     },
     "episodesTitle": "Episodes",
+    "episodesCount": "{count, plural, one {# episode} other {# episodes}}",
     "searchPlaceholder": "Search...",
     "noDescription": "No description",
     "errorLoading": "Error loading data",

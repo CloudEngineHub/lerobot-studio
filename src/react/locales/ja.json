@@ -404,6 +404,7 @@
       "analysis": "分析"
     },
     "episodesTitle": "エピソード",
+    "episodesCount": "{count, plural, other {# 件のエピソード}}",
     "searchPlaceholder": "検索...",
     "noDescription": "説明なし",
     "errorLoading": "データの読み込みエラー",
